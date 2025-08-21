@@ -41,3 +41,4 @@ The script will:
 - The contract address will be saved in `contract.txt`.
 - The transaction hash for the minting process will be printed in the terminal.
  
+ 
