@@ -42,3 +42,4 @@ The script will:
 - The transaction hash for the minting process will be printed in the terminal.
  
  
+ 
