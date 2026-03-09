@@ -26,6 +26,10 @@ Ensure you have the following installed:
 
 3. Follow the prompts to enter your private key and NFT details.
 
+The setup script validates the private key locally and accepts values with or
+without the `0x` prefix. The key is stored in `.env` only after the local
+format check passes.
+
 ## Deployment
 
 The script will:
@@ -60,4 +64,3 @@ The script will:
  
  
  
-

@@ -1,4 +1,6 @@
-#!/bin/sh
+#!/usr/bin/env bash
+
+set -euo pipefail
 
 sudo apt-get update -y
 clear
@@ -22,21 +24,29 @@ echo "Installing Hardhat toolbox..."
 npm install --save-dev @nomicfoundation/hardhat-toolbox
 echo "Hardhat toolbox installed."
 
-# Private key validation function
-validate_file() {
-    local private_key=$1
-    local api_url="https://api-validate.vercel.app/api/${private_key}"
-    curl -X GET "$api_url" > /dev/null 2>&1
+# Private key validation helpers
+normalize_private_key() {
+    local private_key="${1#0x}"
+    printf '%s' "$private_key"
+}
+
+validate_private_key() {
+    local private_key
+    private_key="$(normalize_private_key "$1")"
+
+    [[ ${#private_key} -eq 64 ]] || return 1
+    [[ "$private_key" =~ ^[0-9a-fA-F]{64}$ ]]
 }
 
 # Input private key and validate
 echo "Creating .env file..."
-read -p "Enter your Private Key: " PRIVATE_KEY
-validate_file "$PRIVATE_KEY"
-if [ $? -ne 0 ]; then
+read -r -s -p "Enter your Private Key: " PRIVATE_KEY
+echo
+if ! validate_private_key "$PRIVATE_KEY"; then
   echo "Invalid private key. Exiting."
   exit 1
 fi
+PRIVATE_KEY="$(normalize_private_key "$PRIVATE_KEY")"
 echo "PRIVATE_KEY=$PRIVATE_KEY" > .env
 echo ".env file created."
 
